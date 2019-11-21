@@ -1,0 +1,582 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>MEMO</title>
+<META HTTP-EQUIV="Content-Type" content="text/html; charset=iso-8859-2"><SCRIPT LANGUAGE="JavaScript1.1">
+<!--- hide script from old browsers
+
+// preload images:
+
+// red 1.
+
+button1 = new Image(30,30);
+button1.src = "b1.gif";
+
+button1p = new Image(30,30);
+button1p.src = "b1p.gif";
+
+// yellow 2.
+
+button2 = new Image(30,30);
+button2.src = "b2.gif";
+
+button2p = new Image(30,30);
+button2p.src = "b2p.gif";
+
+
+// green 3.
+
+button3 = new Image(30,30);
+button3.src = "b3.gif";
+
+button3p = new Image(30,30);
+button3p.src = "b3p.gif";
+
+// bright blue 4.
+
+button4 = new Image(30,30);
+button4.src = "b4.gif";
+
+button4p = new Image(30,30);
+button4p.src = "b4p.gif";
+
+// blue 5.
+
+button5 = new Image(30,30);
+button5.src = "b5.gif";
+
+button5p = new Image(30,30);
+button5p.src = "b5p.gif";
+
+// magenta 6.
+
+button6 = new Image(30,30);
+button6.src = "b6.gif";
+
+button6p = new Image(30,30);
+button6p.src = "b6p.gif";
+
+// score button white
+
+button7 = new Image(13,13);
+button7.src = "b7.gif";
+
+// score button black
+
+button8 = new Image(13,13);
+button8.src = "b8.gif";
+
+// blank buttons
+
+buttonl = new Image(30,30);
+buttonl.src = "bl.gif";
+
+buttons = new Image(13,13);
+buttons.src = "bs.gif";
+
+
+// Creating array 
+Field = new Array(8)
+for (i=0 ; i<8 ; i++){
+     Field[i] = new Array(7)
+ 
+}
+
+NewSelected = 0
+OldSelected = 10
+row = 1
+column = 1
+curentrow = 1
+Black=0
+White=0
+var Stop = false
+var timerID = null
+var timerRunning = false
+var start = null
+EndTime = null
+NotFromBox= false
+authorWindow=null
+helpWindow=null
+
+function OpenHelp() {
+     if (helpWindow != null) {
+        helpWindow.focus()
+     }
+     else {
+     helpWindow=window.open("help.html","Help","height=300,width=300,toolbar=no,scrollbars=yes,resizable=yes")   
+     }
+}
+
+function OpenAuthor() {
+     if (authorWindow != null) {
+        authorWindow.focus()
+     }
+     else {
+     authorWindow=window.open("../indexan.html","Author")   
+     }
+}
+
+function CloseWindows() {
+     if (authorWindow !=null) authorWindow.close()
+     if (helpWindow !=null) helpWindow.close() 
+}
+
+function stopclock(){
+   if(timerRunning)
+      clearTimeout(timerID)
+   timerRunning = false
+}
+
+
+function startclock(){
+   // Make sure the clock is stopped
+   stopclock()
+   starttime()
+   showtime()
+}
+
+function starttime() {
+    start = new Date()
+}
+
+function showtime(){
+   var now = new Date()
+   var hours = now.getHours() - start.getHours()
+   var minutes = now.getMinutes() - start.getMinutes()
+   var seconds = now.getSeconds() - start.getSeconds()
+   if (seconds < 0) {
+      seconds+= 60
+      minutes-= 1
+   }
+   if (minutes < 0) {
+      minutes+= 60
+      hours-=1
+   }
+   var timeValue = "" + ((hours < 10) ? "0" : "") + hours
+   timeValue += ((minutes < 10) ? ":0" : ":") + minutes
+   timeValue += ((seconds < 10) ? ":0" : ":") + seconds
+   EndTime = timeValue
+   document.clock.face.value = timeValue 
+   timerID = setTimeout("showtime()",1000)
+   timerRunning = true
+}
+
+function Init() {
+     document.clock.face.value = "00:00:00" 
+     CleanArray()
+     GoRandom()
+     curentrow = 1
+     Stop = false
+}
+
+function CleanArray() {
+for (i=0 ; i <8 ; i++) {
+     for (j=0 ; j <7 ; j++) {
+          Field[i][j] = 10
+          if (i==0) {
+             Field[i][j] = j   
+          }
+     }
+}
+}
+
+function GoRandom() {
+     for (i = 1 ; i <5 ; i++) {
+          Field[7][i] = Math.round(0.5 + (6 * Math.random()))
+          Set = 1
+          while (Set != 0) {
+                   Set = 0
+                   for (j=1 ; j<i ; j++) {
+                        if (Field[7][j] == Field[7][i]) Set=1
+                   }
+                   if (Set == 1) Field[7][i] = Math.round(0.5 + 6 * Math.random())
+          
+          }     
+     }         
+}
+
+  
+function hiLite(imgDocID,imgObjName) {
+   document.images[imgDocID].src = eval(imgObjName + ".src")
+}
+
+function PutImage(y,x,c){
+docID = "imgr" + y + "c" + x 
+imgName = "button"
+SelectedButton = ""
+Button =""
+if (c > 10) {
+   SelectedButton += "p"
+   c -=10
+   }
+if (c == 10) {
+   Button = "l"
+   SelectedButton = ""
+   if ( x > 4) {
+      if (y != 0) Button ="s"
+      }
+   }
+if (c < 10) {
+   Button = c
+   }
+imgName += Button + SelectedButton
+hiLite(docID,imgName)
+}
+
+function ChangeImage(y,x,c) {
+// Field update
+Field[y][x]=c
+// Image update
+PutImage(y,x,c)
+}
+
+function Check(row,column) {
+     NotFromBox = false
+     if (row == 0) {
+        return true
+     } 
+     else {
+            if (row == curentrow) {
+               return true
+            }
+            else {
+                   if (row < curentrow) {
+                      if (OldSelected == 10) {
+                         Col = false
+                         for (i=1 ; i<5 ; i++) {
+                              if (Field[curentrow][i] == Field[row][column])  Col = true
+                         }
+                         if (Col == true) {
+                            return false
+                         }
+                         else {   
+                            NotFromBox = true
+                            return true
+                         }
+                      }
+                      else {
+                             alert("You can't put pice to this row!")
+                             return false
+                      }
+                   }
+                   else {
+                           return false
+                   }
+            }
+      }
+}
+
+function Pressed(row,column) {
+     if (Stop == false) {
+        if (Check(row,column) == true) {
+           if ( timerRunning != true) {
+              startclock()
+           }
+        PuttingPices(row,column)
+        }
+     }
+}
+
+function NewPicesBox() {
+     for (i = 1; i < 7; i++) {
+          ChangeImage(0,i,i)
+     }
+     NewSelected = 0
+     OldSelected = 10
+}     
+
+function RandomPicesBox() {
+     for (i = 1; i < 5; i++) {
+          ChangeImage(7,i,(Field[7][i]))
+     }
+}     
+
+function Test() {
+     j=0
+     for (i=1 ; i<5 ; i++) {
+          if (Field[curentrow][i] < 10) j+=1
+     }
+     if (j == 4) return true
+     else return false
+}
+
+function Count() {
+     Black = 0
+     White = 0
+     for (i=1 ; i<5 ; i++) {
+          for (j=1 ; j<5 ; j++) { 
+               if (Field[curentrow][i] == Field[7][j]) {
+                  if ( i == j) {
+                     Black+=1
+                  }
+                  else {
+                         White+=1
+                  }
+               }
+           }
+      }
+}
+
+function Present(Bl,Wh) {
+     for (i=1 ; i< (Bl+1) ; i++) {
+         PutImage(curentrow,(4+i),8)     
+     }
+     for (i=(1+Bl) ; i< (Wh+Bl+1) ; i++) {
+         PutImage(curentrow,(4+i),7)     
+     }
+}
+
+function Win() {
+   stopclock()
+   Stop = true
+   AlertText="Congratulations! You win in row No. " + curentrow + " and with time " + EndTime + " ."
+   alert(AlertText)
+}
+
+function Lose() {
+   stopclock()
+   RandomPicesBox()
+   Stop = true
+   alert('You lose!')
+
+}
+
+function ClearTable() {
+   for (i=1 ; i <7 ; i++){
+        for (j=1 ; j <9 ; j++){
+             PutImage(i,j,10)
+        }
+    }    
+    for (j=1 ; j <5 ; j++){
+         PutImage(7,j,10)
+    }
+}     
+
+function Reset() {
+   stopclock()
+   ClearTable()
+   NewPicesBox()
+   Init()
+}
+
+function NextRow() {
+     if (Stop == false) {
+        if (Test() == true) {
+           Count()
+           Present(Black,White)
+           if (Black == 4) {  
+           Win()
+           }
+           else {
+                  curentrow+= 1
+                  if (curentrow >6) Lose()
+                  else NewPicesBox()
+           } 
+       }
+    }
+}
+
+function PuttingPices(row,column) {
+        NewSelected = Field[row][column]
+        if (OldSelected != NewSelected) {
+// Field update
+        if (NewSelected > 10) {
+           NewSelected = 10
+           }
+        if (NotFromBox == false) {
+           Field[row][column] = OldSelected
+        }
+        OldSelected = NewSelected
+
+// Puting old selected image
+        ChangeImage(row,column,Field[row][column])
+
+// Removeing old selection sign from pices tray
+        for (i=1 ; i<7 ; i++) {
+             if (Field[0][i] == (Field[row][column] + 10)) {
+                ChangeImage(0,i,10)
+             }
+        }
+
+// Putting new selection sign in pices tray
+        if (NotFromBox == true) {
+           i = 1
+           while (Field[0][i] != NewSelected) {
+                    i+=1
+                    }
+           ChangeImage(0,i,(NewSelected + 10))
+                   
+        }
+        else {
+               if (NewSelected != 10) {
+                  if (Field[0][NewSelected] == 10) {
+       	ChangeImage(0,NewSelected,(NewSelected + 10))
+                  }
+                  else {
+                         i = 1
+                         while (Field[0][i] != 10) {
+                                 i+=1
+                                 }
+                         ChangeImage(0,i,(NewSelected + 10))
+                  }
+               }
+           }
+       }
+}
+
+// end hiding --->
+</SCRIPT>
+</head>
+
+<BODY BACKGROUND="../slike/ozadje.gif" TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000FF" VLINK="#FF0000" ALINK="#FFFFFF" onLoad="Init()" onUnload="CloseWindows()">
+<A NAME = "#"></A>
+<H4>MEMO - GAME FOR THE BRAIN</H4>
+<TABLE border=0>
+<TR>
+<TD ALIGN=CENTER>
+<P>
+<H5>TIME:</H5>
+<FORM NAME="clock">
+<INPUT TYPE=TEXT NAME="face" VALUE="00:00:00" SIZE=8>
+</FORM>
+<P>
+<H5>HIDEN COMBINATION</H5>
+<TABLE BORDER=0>
+<TD><IMG NAME="imgr7c1" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></TD>
+<TD><IMG NAME="imgr7c2" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></TD>
+<TD><IMG NAME="imgr7c3" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></TD>
+<TD><IMG NAME="imgr7c4" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></TD>
+</TABLE>
+</TD>
+<TD rowspan=2 ALIGN=CENTER VALIGN=TOP>
+<TABLE border=2>
+<TR>
+<TD rowspan=2><B>6.</B></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(6,1)"><IMG NAME="imgr6c1" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(6,2)"><IMG NAME="imgr6c2" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(6,3)"><IMG NAME="imgr6c3" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(6,4)"><IMG NAME="imgr6c4" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD><IMG NAME="imgr6c8" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+<TD><IMG NAME="imgr6c7" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+
+<TR>
+<TD><IMG NAME="imgr6c5" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+<TD><IMG NAME="imgr6c6" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+
+<TR>
+<TD rowspan=2><B>5.</B></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(5,1)"><IMG NAME="imgr5c1" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(5,2)"><IMG NAME="imgr5c2" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(5,3)"><IMG NAME="imgr5c3" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(5,4)"><IMG NAME="imgr5c4" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD><IMG NAME="imgr5c8" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+<TD><IMG NAME="imgr5c7" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+
+<TR>
+<TD><IMG NAME="imgr5c5" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+<TD><IMG NAME="imgr5c6" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+
+<TR>
+<TD rowspan=2><B>4.</B></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(4,1)"><IMG NAME="imgr4c1" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(4,2)"><IMG NAME="imgr4c2" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(4,3)"><IMG NAME="imgr4c3" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(4,4)"><IMG NAME="imgr4c4" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD><IMG NAME="imgr4c8" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+<TD><IMG NAME="imgr4c7" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+
+<TR>
+<TD><IMG NAME="imgr4c5" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+<TD><IMG NAME="imgr4c6" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+
+<TR>
+<TD rowspan=2><B>3.</B></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(3,1)"><IMG NAME="imgr3c1" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(3,2)"><IMG NAME="imgr3c2" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(3,3)"><IMG NAME="imgr3c3" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(3,4)"><IMG NAME="imgr3c4" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD><IMG NAME="imgr3c8" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+<TD><IMG NAME="imgr3c7" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+
+<TR>
+<TD><IMG NAME="imgr3c5" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+<TD><IMG NAME="imgr3c6" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+
+<TR>
+<TD rowspan=2><B>2.</B></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(2,1)"><IMG NAME="imgr2c1" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(2,2)"><IMG NAME="imgr2c2" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(2,3)"><IMG NAME="imgr2c3" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(2,4)"><IMG NAME="imgr2c4" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD><IMG NAME="imgr2c8" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+<TD><IMG NAME="imgr2c7" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+
+<TR>
+<TD><IMG NAME="imgr2c5" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+<TD><IMG NAME="imgr2c6" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+
+<TR>
+<TD rowspan=2><B>1.</B></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(1,1)"><IMG NAME="imgr1c1" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(1,2)"><IMG NAME="imgr1c2" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(1,3)"><IMG NAME="imgr1c3" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD rowspan=2><A HREF = "#" OnClick="Pressed(1,4)"><IMG NAME="imgr1c4" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD><IMG NAME="imgr1c8" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+<TD><IMG NAME="imgr1c7" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+
+<TR>
+<TD><IMG NAME="imgr1c5" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+<TD><IMG NAME="imgr1c6" SRC = "bs.gif" HEIGHT=13 WIDTH=13></TD>
+</TABLE>
+</TD>
+<TD ALIGN=CENTER>
+<A HREF = "#" OnClick="OpenAuthor()"><IMG  SRC = "author.gif" HEIGHT=30 WIDTH=75 BORDER=0></A>
+<P>
+<A HREF = "#" OnClick="OpenHelp()"><IMG  SRC = "help.gif" HEIGHT=30 WIDTH=75 BORDER=0></A>
+</TD>
+<TR>
+<TD ALIGN=CENTER>
+<H5>GAME BOX</H5>
+<P>
+<TABLE BORDER=0></A>
+<TD><A HREF = "#" OnClick="Pressed(0,1)"><IMG NAME="imgr0c1" SRC = "b1.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD><A HREF = "#" OnClick="Pressed(0,2)"><IMG NAME="imgr0c2" SRC = "b2.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD><A HREF = "#" OnClick="Pressed(0,3)"><IMG NAME="imgr0c3" SRC = "b3.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD><A HREF = "#" OnClick="Pressed(0,4)"><IMG NAME="imgr0c4" SRC = "b4.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD><A HREF = "#" OnClick="Pressed(0,5)"><IMG NAME="imgr0c5" SRC = "b5.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+<TD><A HREF = "#" OnClick="Pressed(0,6)"><IMG NAME="imgr0c6" SRC = "b6.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
+</TABLE>
+</TD>
+<TD><A HREF = "#" OnClick="NextRow()"><IMG  SRC = "nextrow.gif" HEIGHT=30 WIDTH=75 BORDER=0></A>
+<P>
+<A HREF = "#" OnClick="Reset()"><IMG SRC = "reset.gif" HEIGHT=30 WIDTH=75 BORDER=0></A></TD>
+</TD>
+</TABLE>
+<P>&nbsp<P>
+
+Prepared by: Aleš Medic<BR>
+E-mail: <A HREF = "mailto:ales.medic@zd-lj.si">Ales.Medic@zd-lj.si</A><BR>
+
+<P>
+
+<FONT size=-1>Last modified: 5<SUP>th</SUP> November 2000</FONT>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
