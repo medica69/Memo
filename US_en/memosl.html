@@ -2,12 +2,14 @@
 <html>
 <head>
 <title>MEMO</title>
-<META HTTP-EQUIV="Content-Type" content="text/html; charset=iso-8859-2"><SCRIPT LANGUAGE="JavaScript1.1">
-<!--- hide script from old browsers
+<META HTTP-EQUIV="Content-Type" content="text/html; charset=iso-8859-2">
+<SCRIPT LANGUAGE="JavaScript1.1">
+<!--- skrivanje programa pred starimi pregledovalniki
 
-// preload images:
 
-// red 1.
+// pobiranje slik v spomin
+
+// rdeca 1.
 
 button1 = new Image(30,30);
 button1.src = "b1.gif";
@@ -15,7 +17,7 @@ button1.src = "b1.gif";
 button1p = new Image(30,30);
 button1p.src = "b1p.gif";
 
-// yellow 2.
+// rumena 2.
 
 button2 = new Image(30,30);
 button2.src = "b2.gif";
@@ -24,7 +26,7 @@ button2p = new Image(30,30);
 button2p.src = "b2p.gif";
 
 
-// green 3.
+// zelena 3.
 
 button3 = new Image(30,30);
 button3.src = "b3.gif";
@@ -32,7 +34,7 @@ button3.src = "b3.gif";
 button3p = new Image(30,30);
 button3p.src = "b3p.gif";
 
-// bright blue 4.
+// svetlo modra 4.
 
 button4 = new Image(30,30);
 button4.src = "b4.gif";
@@ -40,7 +42,7 @@ button4.src = "b4.gif";
 button4p = new Image(30,30);
 button4p.src = "b4p.gif";
 
-// blue 5.
+// modra 5.
 
 button5 = new Image(30,30);
 button5.src = "b5.gif";
@@ -48,7 +50,7 @@ button5.src = "b5.gif";
 button5p = new Image(30,30);
 button5p.src = "b5p.gif";
 
-// magenta 6.
+// roza 6.
 
 button6 = new Image(30,30);
 button6.src = "b6.gif";
@@ -56,17 +58,17 @@ button6.src = "b6.gif";
 button6p = new Image(30,30);
 button6p.src = "b6p.gif";
 
-// score button white
+// bela
 
 button7 = new Image(13,13);
 button7.src = "b7.gif";
 
-// score button black
+// crna
 
 button8 = new Image(13,13);
 button8.src = "b8.gif";
 
-// blank buttons
+// prazne
 
 buttonl = new Image(30,30);
 buttonl.src = "bl.gif";
@@ -75,7 +77,8 @@ buttons = new Image(13,13);
 buttons.src = "bs.gif";
 
 
-// Creating array 
+
+// Izdelava polja 
 Field = new Array(8)
 for (i=0 ; i<8 ; i++){
      Field[i] = new Array(7)
@@ -103,7 +106,7 @@ function OpenHelp() {
         helpWindow.focus()
      }
      else {
-     helpWindow=window.open("help.html","Help","height=300,width=300,toolbar=no,scrollbars=yes,resizable=yes")   
+     helpWindow=window.open("pomoc.html","Help","height=300,width=300,toolbar=no,scrollbars=yes,resizable=yes")   
      }
 }
 
@@ -112,11 +115,12 @@ function OpenAuthor() {
         authorWindow.focus()
      }
      else {
-     authorWindow=window.open("../indexan.html","Author")   
+     authorWindow=window.open("../index.html","Author")   
      }
 }
 
 function CloseWindows() {
+     stopclock()
      if (authorWindow !=null) authorWindow.close()
      if (helpWindow !=null) helpWindow.close() 
 }
@@ -129,7 +133,7 @@ function stopclock(){
 
 
 function startclock(){
-   // Make sure the clock is stopped
+   // Ustavitev ure ce slucajno tece
    stopclock()
    starttime()
    showtime()
@@ -224,9 +228,9 @@ hiLite(docID,imgName)
 }
 
 function ChangeImage(y,x,c) {
-// Field update
+// Popravek polja
 Field[y][x]=c
-// Image update
+// Popravek slike
 PutImage(y,x,c)
 }
 
@@ -255,7 +259,7 @@ function Check(row,column) {
                          }
                       }
                       else {
-                             alert("You can't put pice to this row!")
+                             alert("V to vrsto ne moreš postaviti barvo!")
                              return false
                       }
                    }
@@ -329,7 +333,7 @@ function Present(Bl,Wh) {
 function Win() {
    stopclock()
    Stop = true
-   AlertText="Congratulations! You win in row No. " + curentrow + " and with time " + EndTime + " ."
+   AlertText="Čestitam! Zmagal si v " + curentrow + " . vrsti in s časom " + EndTime + " ."
    alert(AlertText)
 }
 
@@ -337,7 +341,7 @@ function Lose() {
    stopclock()
    RandomPicesBox()
    Stop = true
-   alert('You lose!')
+   alert('Zgubil si!')
 
 }
 
@@ -379,7 +383,7 @@ function NextRow() {
 function PuttingPices(row,column) {
         NewSelected = Field[row][column]
         if (OldSelected != NewSelected) {
-// Field update
+// Popravek polja
         if (NewSelected > 10) {
            NewSelected = 10
            }
@@ -388,17 +392,17 @@ function PuttingPices(row,column) {
         }
         OldSelected = NewSelected
 
-// Puting old selected image
+// Postavitev izbrane barve
         ChangeImage(row,column,Field[row][column])
 
-// Removeing old selection sign from pices tray
+// Odstranitev sencene slike iz skatlice
         for (i=1 ; i<7 ; i++) {
              if (Field[0][i] == (Field[row][column] + 10)) {
                 ChangeImage(0,i,10)
              }
         }
 
-// Putting new selection sign in pices tray
+// Postavitev sencene slike za novo izbrano barvo
         if (NotFromBox == true) {
            i = 1
            while (Field[0][i] != NewSelected) {
@@ -424,23 +428,23 @@ function PuttingPices(row,column) {
        }
 }
 
-// end hiding --->
+// konec skrivanja --->
 </SCRIPT>
 </head>
 
 <BODY BACKGROUND="../slike/ozadje.gif" TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000FF" VLINK="#FF0000" ALINK="#FFFFFF" onLoad="Init()" onUnload="CloseWindows()">
 <A NAME = "#"></A>
-<H4>MEMO - GAME FOR THE BRAIN</H4>
+<H4>MEMO - IGRA ZA MOŽGANE</H4>
 <TABLE border=0>
 <TR>
 <TD ALIGN=CENTER>
 <P>
-<H5>TIME:</H5>
+<H5>ČAS:</H5>
 <FORM NAME="clock">
 <INPUT TYPE=TEXT NAME="face" VALUE="00:00:00" SIZE=8>
 </FORM>
 <P>
-<H5>HIDEN COMBINATION</H5>
+<H5>SKRITA KOMBINACIJA</H5>
 <TABLE BORDER=0>
 <TD><IMG NAME="imgr7c1" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></TD>
 <TD><IMG NAME="imgr7c2" SRC = "bl.gif" HEIGHT=30 WIDTH=30 BORDER=0></TD>
@@ -530,13 +534,13 @@ function PuttingPices(row,column) {
 </TABLE>
 </TD>
 <TD ALIGN=CENTER>
-<A HREF = "#" OnClick="OpenAuthor()"><IMG  SRC = "author.gif" HEIGHT=30 WIDTH=75 BORDER=0></A>
+<A HREF = "#" OnClick="OpenAuthor()"><IMG  SRC = "avtor.gif" HEIGHT=30 WIDTH=75 BORDER=0></A>
 <P>
-<A HREF = "#" OnClick="OpenHelp()"><IMG  SRC = "help.gif" HEIGHT=30 WIDTH=75 BORDER=0></A>
+<A HREF = "#" OnClick="OpenHelp()"><IMG  SRC = "pomoc.gif" HEIGHT=30 WIDTH=75 BORDER=0></A>
 </TD>
 <TR>
 <TD ALIGN=CENTER>
-<H5>GAME BOX</H5>
+<H5>ŠKATLICA</H5>
 <P>
 <TABLE BORDER=0></A>
 <TD><A HREF = "#" OnClick="Pressed(0,1)"><IMG NAME="imgr0c1" SRC = "b1.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
@@ -547,26 +551,26 @@ function PuttingPices(row,column) {
 <TD><A HREF = "#" OnClick="Pressed(0,6)"><IMG NAME="imgr0c6" SRC = "b6.gif" HEIGHT=30 WIDTH=30 BORDER=0></A></TD>
 </TABLE>
 </TD>
-<TD><A HREF = "#" OnClick="NextRow()"><IMG  SRC = "nextrow.gif" HEIGHT=30 WIDTH=75 BORDER=0></A>
+<TD><A HREF = "#" OnClick="NextRow()"><IMG  SRC = "preglej.gif" HEIGHT=30 WIDTH=75 BORDER=0></A>
 <P>
-<A HREF = "#" OnClick="Reset()"><IMG SRC = "reset.gif" HEIGHT=30 WIDTH=75 BORDER=0></A></TD>
+<A HREF = "#" OnClick="Reset()"><IMG SRC = "resetira.gif" HEIGHT=30 WIDTH=75 BORDER=0></A></TD>
 </TD>
 </TABLE>
 <P>&nbsp<P>
 
-Created by: Aleš Medic<BR>
+Izdelal: Aleš Medic<BR>
 E-mail: <A HREF = "mailto:alesmedic@gmail.com">alesmedic@gmail.com</A><BR>
 Facebook: <A target="_blank" rel="noopener noreferrer" HREF = "http://facebook.com/alesmedic">alesmedic</A><BR>
-Instagram: <A target="_blank" rel="noopener noreferrer" HREF = "http://instagram.com/alesmedic">alesmedic</A><BR>
+Instagram: <A target="_blank" rel="noopener noreferrer" HREF = "http://facebook.com/alesmedic">alesmedic</A><BR>
 
 <P>
 
-<FONT size=-1>Last modified: 21<SUP>st</SUP> November 2019</FONT>
+<FONT size=-1>Zadnja sprememba: 21 november 2019</FONT>
+
 
 
 </body>
 </html>
-
 
 
 
